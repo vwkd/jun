@@ -5,7 +5,7 @@
 ## Create
 
 ```
-pub struct Users {
+struct Users {
   id: u128,
   name: String,
   age: u8,
