@@ -30,7 +30,7 @@ CREATE TABLE users (
 use Users;
 
 if id == 1 {
-  { id, name }
+  id, name
 }
 ```
 
