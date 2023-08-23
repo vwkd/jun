@@ -65,7 +65,11 @@ WHERE id = 1;
 ```
 use Users;
 
-Users = { id: 1, name: "John Doe", age: 42 };
+if id == None {
+  id = 1;
+  name = "John Doe";
+  age = 42;
+}
 ```
 
 ```sql
@@ -81,7 +85,9 @@ VALUES (1, 'John Doe', 42);
 use Users;
 
 if id == 1 {
-  delete Users;
+  id = None;
+  name = None;
+  age = None;
 }
 ```
 
