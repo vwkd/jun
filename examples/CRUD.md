@@ -26,6 +26,8 @@ CREATE TABLE users (
 
 ## Read
 
+- read some
+
 ```
 use Users;
 
@@ -36,6 +38,22 @@ if id == 1 {
 
 ```sql
 SELECT id, name
+FROM users
+WHERE id = 1;
+```
+
+- read all
+
+```
+use Users;
+
+if id == 1 {
+  _
+}
+```
+
+```sql
+SELECT *
 FROM users
 WHERE id = 1;
 ```
@@ -85,9 +103,7 @@ VALUES (1, 'John Doe', 42);
 use Users;
 
 if id == 1 {
-  id = None;
-  name = None;
-  age = None;
+  _ = None;
 }
 ```
 
