@@ -101,10 +101,18 @@ Movie {
     name,
   },
 }
-.filter(id != uuid("123"))
-.sort(title)
-.skip(10)
-.take(10)
+if {
+  id != uuid("123")
+}
+sort {
+  title
+}
+skip {
+  10
+}
+take {
+  10
+}
 ```
 
 ```sql
@@ -137,7 +145,9 @@ OFFSET 10;
 Movie {
   title: "Dune 1",
 }
-.filter(id == uuid("123"))
+if {
+  id == uuid("123")
+}
 ```
 
 ```sql
@@ -151,9 +161,10 @@ WHERE id = 123;
 ## Delete
 
 ```
-Movie
-.filter(id == uuid("123"))
-.delete()
+delete Movie
+if {
+  id == uuid("123")
+}
 ```
 
 ```sql
