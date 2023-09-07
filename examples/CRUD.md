@@ -65,35 +65,6 @@ INSERT INTO MovieActor (id, movie_id, actor_id) VALUES (2, 1, 2);
 
 ## Read
 
-- without filter
-
-```
-Movie {
-  title,
-  actors {
-    name,
-  },
-}
-```
-
-```sql
-SELECT
-  JSON_OBJECT(
-    'title', M.title,
-    'actors', JSON_ARRAYAGG(JSON_OBJECT('name', A.name))
-  ) AS movie_data
-FROM
-  Movie M
-INNER JOIN
-  MovieActor MA ON M.id = MA.movie_id
-INNER JOIN
-  Actor A ON MA.actor_id = A.id
-GROUP BY
-  M.title;
-```
-
-- with filter
-
 ```
 Movie {
   title,
