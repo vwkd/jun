@@ -128,7 +128,7 @@ INNER JOIN
 INNER JOIN
   Actor A ON MA.actor_id = A.id
 WHERE
-  M.id <> 123
+  M.id <> 1
 GROUP BY
   M.title
 ORDER BY
@@ -153,7 +153,7 @@ if {
 ```sql
 UPDATE Movie
 SET title = 'Dune 1'
-WHERE id = 123;
+WHERE id = 1;
 ```
 
 
@@ -169,5 +169,5 @@ if {
 
 ```sql
 DELETE FROM Movie
-WHERE id = 123;
+WHERE id = 1;
 ```
