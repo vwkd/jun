@@ -2,60 +2,131 @@
 
 
 
-## Create
+## Schema
 
 ```
-struct Users {
-  id: u128,
-  name: String,
-  age: u8,
+type Movie {
+  title: String!,
+  actors: [Actor!],
 }
 
-markPrimaryKey(Users::id);
+type Actor {
+  name: String!
+}
 ```
 
 ```sql
-CREATE TABLE users (
+CREATE TABLE Movie (
   id INT PRIMARY KEY,
-  name TEXT,
-  age INT
+  title TEXT NON NULL,
 );
+
+CREATE TABLE Actor (
+  id INT PRIMARY KEY,
+  name TEXT NON NULL,
+);
+
+CREATE TABLE MovieActor (
+  id INT PRIMARY KEY,
+  movie_id INT NON NULL,
+  actor_id INT NON NULL,
+);
+```
+
+
+
+## Create
+
+```
+Movie {
+  title: "Dune",
+  actors: [
+    Actor {
+      name: "Timothée Chalamet",
+    },
+    Actor {
+      name: "Zendaya",
+    }
+  ]
+}
+```
+
+```sql
+INSERT INTO Movie (id, title) VALUES (1, 'Dune');
+
+INSERT INTO Actor (id, name) VALUES (1, 'Timothée Chalamet');
+INSERT INTO Actor (id, name) VALUES (2, 'Zendaya');
+
+INSERT INTO MovieActor (id, movie_id, actor_id) VALUES (1, 1, 1);
+INSERT INTO MovieActor (id, movie_id, actor_id) VALUES (2, 1, 2);
 ```
 
 
 
 ## Read
 
-- read some
+- without filter
 
 ```
-use Users;
-
-if id == 1 {
-  id, name
+Movie {
+  title,
+  actors {
+    name,
+  },
 }
 ```
 
 ```sql
-SELECT id, name
-FROM users
-WHERE id = 1;
+SELECT
+  JSON_OBJECT(
+    'title', M.title,
+    'actors', JSON_ARRAYAGG(JSON_OBJECT('name', A.name))
+  ) AS movie_data
+FROM
+  Movie M
+INNER JOIN
+  MovieActor MA ON M.id = MA.movie_id
+INNER JOIN
+  Actor A ON MA.actor_id = A.id
+GROUP BY
+  M.title;
 ```
 
-- read all
+- with filter
 
 ```
-use Users;
-
-if id == 1 {
-  _
+Movie {
+  title,
+  actors {
+    name,
+  },
 }
+.filter(id != uuid("123"))
+.sort(title)
+.skip(10)
+.take(10)
 ```
 
 ```sql
-SELECT *
-FROM users
-WHERE id = 1;
+SELECT
+  JSON_OBJECT(
+    'title', M.title,
+    'actors', JSON_ARRAYAGG(JSON_OBJECT('name', A.name))
+  ) AS movie_data
+FROM
+  Movie M
+INNER JOIN
+  MovieActor MA ON M.id = MA.movie_id
+INNER JOIN
+  Actor A ON MA.actor_id = A.id
+WHERE
+  M.id <> 123
+GROUP BY
+  M.title
+ORDER BY
+  M.title
+LIMIT 10
+OFFSET 10;
 ```
 
 
@@ -63,36 +134,16 @@ WHERE id = 1;
 ## Update
 
 ```
-use Users;
-
-if id == 1 {
-  age = 42;
+Movie {
+  title: "Dune 1",
 }
+.filter(id == uuid("123"))
 ```
 
 ```sql
-UPDATE users
-SET age = 42
-WHERE id = 1;
-```
-
-
-
-## Insert
-
-```
-use Users;
-
-if id == None {
-  id = 1;
-  name = "John Doe";
-  age = 42;
-}
-```
-
-```sql
-INSERT INTO users (id, name, age)
-VALUES (1, 'John Doe', 42);
+UPDATE Movie
+SET title = 'Dune 1'
+WHERE id = 123;
 ```
 
 
@@ -100,14 +151,12 @@ VALUES (1, 'John Doe', 42);
 ## Delete
 
 ```
-use Users;
-
-if id == 1 {
-  _ = None;
-}
+Movie
+.filter(id == uuid("123"))
+.delete()
 ```
 
 ```sql
-DELETE FROM users
-WHERE id = 1;
+DELETE FROM Movie
+WHERE id = 123;
 ```
