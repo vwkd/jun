@@ -46,3 +46,16 @@ ORDER BY
 LIMIT 10
 OFFSET 10;
 ```
+
+```edgeql
+select Movie {
+    title,
+    actors: {
+        name,
+    }
+}
+filter .id != <uuid>"123"
+order by .title
+offset 10
+limit 10;
+```

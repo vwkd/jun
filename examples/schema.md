@@ -32,3 +32,14 @@ CREATE TABLE MovieActor (
   actor_id INT NOT NULL REFERENCES Actor(id),
 );
 ```
+
+```esdl
+type Movie {
+  required title: str;
+  multi actors: Actor;
+}
+
+type Actor {
+  required name: str;
+}
+```
